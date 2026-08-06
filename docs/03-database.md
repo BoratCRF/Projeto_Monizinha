@@ -8,6 +8,14 @@
 **Banco de dados:** PostgreSQL
 **Data-alvo da versão 1.0:** 08/08/2026
 
+## Status por área
+
+* **[HUB — VERSÃO 1.0]** Será implementado e publicado na versão 1.0.
+* **[CROCHÊ — VERSÃO 1.0]** Será implementado e publicado na versão 1.0.
+* **[BOLOS FAKE — VERSÃO FUTURA]** Permanecerá documentado como preparação arquitetural, mas não será implementado nem publicado na versão 1.0.
+
+Sempre que uma seção se referir exclusivamente a uma dessas áreas, ela deverá utilizar a identificação correspondente.
+
 ---
 
 ## 1. Objetivo
@@ -16,10 +24,10 @@ Este documento define a modelagem inicial do banco de dados do Projeto Monizinha
 
 A modelagem deverá permitir:
 
-* administrar as duas lojas;
+* administrar o Hub e a Loja de Crochê na versão 1.0, mantendo a estrutura preparada para a futura Loja de Bolos Fake;
 * cadastrar categorias;
-* cadastrar produtos e modelos;
-* separar os catálogos de Crochê e Bolos Fake;
+* cadastrar produtos de Crochê na versão 1.0 e permitir futuramente o cadastro de modelos de Bolos Fake;
+* manter a separação estrutural entre o catálogo de Crochê e o futuro catálogo de Bolos Fake;
 * cadastrar imagens;
 * definir variações;
 * marcar produtos como recentes ou destacados;
@@ -89,10 +97,12 @@ Na versão inicial, carrinhos e orçamentos serão temporários e permanecerão 
 
 Representa uma loja pertencente à marca Artes de Monizinha.
 
-Inicialmente existirão dois registros:
+A estrutura aceitará dois tipos de loja, porém, na versão 1.0, somente a Loja de Crochê deverá possuir registro ativo e catálogo publicado:
 
-* Crochê;
-* Bolos Fake.
+CROCHÊ — VERSÃO 1.0
+* Crochê
+BOLOS FAKE — VERSÃO FUTURA
+* Bolos Fake
 
 ### Campos
 
@@ -130,14 +140,14 @@ FAKE_CAKES
 
 Representa uma categoria dentro de uma loja.
 
-Exemplos de Crochê:
+CROCHÊ — VERSÃO 1.0
 
 * bodies;
 * biquínis;
 * acessórios;
 * decoração.
 
-Exemplos de Bolos Fake:
+BOLOS FAKE — VERSÃO FUTURA:
 
 * infantil;
 * casamento;
@@ -176,7 +186,13 @@ store + slug = único
 
 ## 6. Modelo `Product`
 
-Representa tanto um produto de Crochê quanto um modelo-base de Bolo Fake.
+O modelo `Product` será utilizado na versão 1.0 para os produtos da Loja de Crochê.
+
+Sua estrutura permanecerá genérica o suficiente para representar futuramente os modelos-base da Loja de Bolos Fake, sem exigir a criação de uma tabela de produtos completamente separada.
+
+**[CROCHÊ — VERSÃO 1.0]** Produtos artesanais, variações, quantidade, carrinho e envio para o WhatsApp.
+
+**[BOLOS FAKE — VERSÃO FUTURA]** Modelos de referência, características gerais, orçamento e envio para o WhatsApp.
 
 O tipo de apresentação e o fluxo comercial serão determinados pela loja associada.
 
@@ -527,9 +543,9 @@ Ele será armazenado na sessão do Django.
 
 ---
 
-## 16. Orçamento de Bolos Fake
+## 16. [BOLOS FAKE — VERSÃO FUTURA] Orçamento
 
-O orçamento da versão 1.0 também não possuirá tabela permanente.
+Esta funcionalidade não será implementada nem publicada na versão 1.0. A seção permanece no documento apenas para preservar a direção futura da modelagem.
 
 Os dados poderão ser:
 
@@ -873,6 +889,8 @@ A ausência desses modelos não impede sua criação posterior.
 
 Os modelos deverão ser implementados nesta ordem:
 
+Na versão 1.0, os modelos serão implementados e utilizados somente nos fluxos do Hub e da Loja de Crochê. Recursos exclusivos de Bolos Fake não fazem parte desta etapa.
+
 1. `Store`;
 2. `Category`;
 3. `Product`;
@@ -890,7 +908,19 @@ Essa ordem respeita os relacionamentos entre as entidades.
 
 ## 30. Escopo mínimo para o lançamento
 
-Para o site funcionar, os seguintes modelos são obrigatórios:
+### [HUB — VERSÃO 1.0]
+
+Para o Hub funcionar, serão necessários:
+
+* `SiteSettings`;
+* informações gerais da marca;
+* links para redes sociais;
+* acesso público à Loja de Crochê;
+* apresentação da futura Loja de Bolos Fake apenas se for exibida como “em breve”.
+
+### [CROCHÊ — VERSÃO 1.0]
+
+Para a Loja de Crochê funcionar, serão obrigatórios:
 
 * `Store`;
 * `Category`;
@@ -899,11 +929,24 @@ Para o site funcionar, os seguintes modelos são obrigatórios:
 * `ProductOptionGroup`;
 * `ProductOption`;
 * `FAQ`;
-* `SiteSettings`.
+* `carrinho armazenado em sessão`;
+* `geração da mensagem para o WhatsApp`.
 
 `ContactMessage` será implementado caso o formulário de contato armazene mensagens no banco.
 
 `ProductView` e `WhatsAppClick` não são obrigatórios para o lançamento.
+
+### [BOLOS FAKE — VERSÃO FUTURA]
+
+Não serão obrigatórios na versão 1.0:
+
+* `catálogo de Bolos Fake`;
+* `modelos de Bolos Fake`;
+* `formulário de orçamento`;
+* `opções específicas de tamanho, formato e acabamento`;
+* fluxo de finalização de orçamento.
+
+A estrutura compartilhada deverá apenas evitar que essa futura implementação exija reconstrução da base.
 
 ---
 
@@ -913,12 +956,12 @@ Para a versão 1.0:
 
 1. O banco oficial será PostgreSQL.
 2. Existirá um modelo `Store`.
-3. As lojas compartilharão o modelo `Product`.
+3. O modelo `Product` será utilizado pelo Crochê na versão 1.0 e preparado para uso futuro por Bolos Fake.
 4. Todo produto estará associado a uma loja.
 5. Categorias também estarão associadas a uma loja.
-6. Crochê e Bolos Fake terão opções configuráveis por produto.
+6. O Crochê terá opções configuráveis por produto na versão 1.0, as opções específicas de Bolos Fake serão implementadas futuramente.
 7. O carrinho será armazenado em sessão.
-8. O orçamento será temporário.
+8. O orçamento de Bolos Fake não será implementado na versão 1.0.
 9. Não haverá tabela de pedidos confirmados.
 10. Não haverá cadastro de clientes.
 11. O usuário padrão do Django será utilizado.
@@ -928,25 +971,50 @@ Para a versão 1.0:
 15. URLs utilizarão slugs.
 16. Imagens não serão armazenadas diretamente no PostgreSQL.
 17. Estatísticas não poderão atrasar a versão funcional.
+18. Somente o Hub e a Loja de Crochê serão publicados na versão 1.0.
+19. A Loja de Bolos Fake será mantida como escopo futuro documentado.
+20. Funcionalidades exclusivas de Bolos Fake não poderão atrasar a entrega da versão 1.0.
 
 ---
 
 ## 32. Critérios de aprovação
 
+### [HUB — VERSÃO 1.0]
+
 A modelagem será considerada adequada quando permitir:
 
-* cadastrar as duas lojas;
-* cadastrar categorias independentes;
-* cadastrar produtos de ambas as lojas;
+* configurar a marca Artes de Monizinha;
+* publicar o Hub;
+* disponibilizar acesso à Loja de Crochê;
+* manter a futura expansão para Bolos Fake identificada.
+
+### [CROCHÊ — VERSÃO 1.0]
+
+A modelagem será considerada adequada quando permitir:
+
+* cadastrar a Loja de Crochê;
+* cadastrar categorias;
+* cadastrar produtos;
 * cadastrar várias imagens;
 * configurar opções diferentes por produto;
 * ocultar produtos e categorias;
 * destacar produtos;
-* gerar carrinho de Crochê;
-* gerar orçamento de Bolos Fake;
-* administrar conteúdo pelo Django Admin;
-* construir URLs amigáveis;
-* evoluir futuramente para pedidos internos.
+* gerar o carrinho;
+* gerar a mensagem para o WhatsApp;
+* administrar o conteúdo pelo Django Admin;
+* construir URLs amigáveis.
+
+### [BOLOS FAKE — VERSÃO FUTURA]
+
+A modelagem deverá permitir a futura inclusão de:
+
+* modelos de Bolos Fake;
+* categorias próprias;
+* opções específicas;
+* formulário de orçamento;
+* geração de mensagem para o WhatsApp;
+
+sem exigir reconstrução dos modelos compartilhados.
 
 ---
 
