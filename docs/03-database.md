@@ -83,13 +83,14 @@ Store
   │             │       └── ProductOption
   │             └── ProductView
   │
-  ├── FAQ
-  └── StoreSettings
+  └── FAQ
 
 SiteSettings
 ```
 
-Na versão inicial, carrinhos e orçamentos serão temporários e permanecerão na sessão do usuário.
+Na versão 1.0, o carrinho da Loja de Crochê será temporário e permanecerá na sessão do usuário.
+
+O orçamento da Loja de Bolos Fake será implementado em uma versão futura e também poderá utilizar dados temporários em sessão.
 
 ---
 
@@ -509,7 +510,7 @@ CONTACT
 
 ---
 
-## 15. Carrinho de Crochê
+## 15. [CROCHÊ — VERSÃO 1.0] Carrinho
 
 O carrinho da versão 1.0 não terá tabela própria.
 
@@ -569,7 +570,7 @@ Os dados poderão ser:
 }
 ```
 
-A versão 1.0 não tratará esse orçamento como pedido confirmado.
+Quando implementado, o orçamento não será tratado como pedido confirmado. Ele representará apenas uma solicitação inicial enviada para o WhatsApp.
 
 ---
 
